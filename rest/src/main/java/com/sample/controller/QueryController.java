@@ -53,7 +53,6 @@ public class QueryController {
         if (pageNo < 5) {
             String rootPath = String.format("%s://%s:%s%s", request.getScheme(), request.getServerName(),
                     request.getServerPort(), request.getContextPath());
-            System.out.println("********** " + rootPath);
             nextUri = URI.create(String.format("%s/v1/statement/%s/%d", rootPath, id, ++pageNo));
         }
 
