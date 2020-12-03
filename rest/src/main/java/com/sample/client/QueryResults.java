@@ -10,7 +10,6 @@ public class QueryResults {
     private List<String> columns;
     private Iterable<List<Object>> data;
     private String error;
-    private Date date;
 
     public QueryResults(String id, URI nextUri, List<String> columns, Iterable<List<Object>> data, String error) {
         this.id = id;
@@ -18,7 +17,6 @@ public class QueryResults {
         this.columns = columns;
         this.data = data;
         this.error = error;
-        this.date = new Date();
     }
 
     public String getId() {
@@ -61,11 +59,4 @@ public class QueryResults {
         this.error = error;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
 }

@@ -1,5 +1,7 @@
 package com.sample.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +20,30 @@ import com.sample.client.QueryResults;
 @RequestMapping("v1/statement")
 public class QueryController {
 
+    // @RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
+    // public QueryResults query(@RequestParam String statement,
+    // HttpServletRequest request) {
+    // if (statement.isEmpty()) {
+    // return new QueryResults(null, null, null, null, "parameter statement is
+    // required.");
+    // }
+    //
+    // return getResults(0, request);
+    // }
+
     @RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
-    public QueryResults query(@RequestParam String statement, HttpServletRequest request) {
-        if (statement.isEmpty()) {
-            return new QueryResults(null, null, null, null, "parameter statement is required.");
+    public QueryResults query(HttpServletRequest request) {
+        try (InputStream in = request.getInputStream()) {
+            StringBuilder builder = new StringBuilder();
+            byte[] buffer = new byte[4096];
+            for (int len; (len = in.read(buffer)) != -1;) {
+                builder.append(new String(buffer, 0, len));
+            }
+            
+            System.out.println("statement = " + builder.toString());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            return new QueryResults(null, null, null, null, "read parameter statement IOException.");
         }
 
         return getResults(0, request);
