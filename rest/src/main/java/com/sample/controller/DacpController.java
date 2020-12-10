@@ -57,6 +57,9 @@ public class DacpController {
 
     @RequestMapping(value = "/getResult", method = { RequestMethod.GET, RequestMethod.POST })
     public DacpResults iterateResults(HttpServletRequest request) {
+//        // empty dataList
+//        return getEmptyResults();
+        
         try {
             StringBuilder builder = getInputJson(request);
             String queryParams = builder.toString();
@@ -112,6 +115,11 @@ public class DacpController {
                 params.getPageSize(),
                 total);
         return new DacpResults("cursor", "taskId0000001", "000", "success", result);
+    }
+    
+    private DacpResults getEmptyResults() {
+        QueryParams params = new QueryParams("taskid", "cursor", "token", 1, 3);
+        return getCursorResults(params, 0, 0);
     }
 
 }
