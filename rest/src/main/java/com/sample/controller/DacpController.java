@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sample.client.CursorResults;
 import com.sample.client.DacpCloumn;
 import com.sample.client.DacpResults;
+import com.sample.client.ExecutePlan;
 import com.sample.client.ExecuteResults;
 import com.sample.client.LoginResults;
 import com.sample.client.QueryParams;
@@ -52,7 +53,13 @@ public class DacpController {
         }
 
         // return new ExecuteResults("taskId0000001", RESULT_TYPE, true, "000", "success", null);
-        return new ExecuteResults("taskId0000001", CURSOR_TYPE, true, "000", "success", null);
+        List<ExecutePlan> executePlan = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            ExecutePlan subPlan = new ExecutePlan("stepId", "dependentStep", "comm", "CREATE TABLE IF NOT EXISTS", "cluster", "comment");
+            executePlan.add(subPlan);
+        }
+        
+        return new ExecuteResults("taskId0000001", CURSOR_TYPE, true, "000", "success", null, executePlan);
     }
 
     @RequestMapping(value = "/getResult", method = { RequestMethod.GET, RequestMethod.POST })
