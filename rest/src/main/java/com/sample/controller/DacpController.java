@@ -59,7 +59,9 @@ public class DacpController {
             executePlan.add(subPlan);
         }
         
-        return new ExecuteResults("taskId0000001", CURSOR_TYPE, true, "000", "success", null, executePlan);
+        // 暂时屏蔽ExecutePlan
+//        return new ExecuteResults("taskId0000001", CURSOR_TYPE, true, "000", "success", null, executePlan);
+        return new ExecuteResults("taskId0000001", CURSOR_TYPE, true, "000", "success", null);
     }
 
     @RequestMapping(value = "/getResult", method = { RequestMethod.GET, RequestMethod.POST })
