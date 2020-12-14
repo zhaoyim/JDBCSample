@@ -6,11 +6,15 @@ public class LoginResults {
     private int expires;
     private String accessToken;
     private String user;
+    private String code;
+    private String msg;
 
-    public LoginResults(int expires, String accessToken, String user) {
+    public LoginResults(int expires, String accessToken, String user, String code, String msg) {
         this.expires = requireNonNull(expires, "expires is null");
         this.accessToken = requireNonNull(accessToken, "accessToken is null");
         this.user = requireNonNull(user, "user is null");
+        this.code = requireNonNull(code, "code is null");
+        this.msg = msg;
     }
 
     public int getExpires() {
@@ -23,5 +27,13 @@ public class LoginResults {
 
     public String getUser() {
         return user;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getMsg() {
+        return msg;
     }
 }

@@ -40,7 +40,7 @@ public class DacpController {
             e.printStackTrace();
         }
 
-        return new LoginResults(3600, "6789978676sdfsdf8978878978", "root");
+        return new LoginResults(3600, "6789978676sdfsdf8978878978", "root", "000", "success");
     }
 
     @RequestMapping(value = "/execute", method = { RequestMethod.GET, RequestMethod.POST })
@@ -121,7 +121,9 @@ public class DacpController {
                 params.getPageNum(), 
                 params.getPageSize(),
                 total);
-        return new DacpResults("cursor", "taskId0000001", "000", "success", result);
+        
+        // construct token expired.
+        return new DacpResults("cursor", "taskId0000001", "700", "success", result);
     }
     
     private DacpResults getEmptyResults() {
