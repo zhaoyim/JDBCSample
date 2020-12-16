@@ -30,6 +30,8 @@ public class DacpController {
     private static final JsonCodec<QueryParams> QUERY_PARAMS_CODEC = jsonCodec(QueryParams.class);
     private static final String CURSOR_TYPE = "cursor"; 
     private static final String RESULT_TYPE = "result"; 
+    
+    private static int counter = 0;
 
     @RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
     public LoginResults login(HttpServletRequest request) {
@@ -52,7 +54,8 @@ public class DacpController {
             e.printStackTrace();
         }
 
-        // return new ExecuteResults("taskId0000001", RESULT_TYPE, true, "000", "success", null);
+//        return new ExecuteResults("taskId0000001", RESULT_TYPE, true, "000", "success", null);
+        
         List<ExecutePlan> executePlan = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             ExecutePlan subPlan = new ExecutePlan("stepId", "dependentStep", "comm", "CREATE TABLE IF NOT EXISTS", "cluster", "comment");
@@ -75,6 +78,12 @@ public class DacpController {
             System.out.println("queryResults = " + queryParams);
             QueryParams params = QUERY_PARAMS_CODEC.fromJson(queryParams);
             if (CURSOR_TYPE.equals(params.getType())) {
+                
+                if (counter < 3 && 1 == params.getPageNum()) {
+                    counter += 1;
+                    return new DacpResults("cursor", "taskId0000001", "001", "running", null);
+                }
+                
                 int total = 9;
                 if (3 > params.getPageNum()) {
                     return getCursorResults(params, params.getPageSize(), total);
@@ -125,7 +134,7 @@ public class DacpController {
                 total);
         
         // construct token expired.
-        return new DacpResults("cursor", "taskId0000001", "700", "success", result);
+        return new DacpResults("cursor", "taskId0000001", "000", "success", result);
     }
     
     private DacpResults getEmptyResults() {
