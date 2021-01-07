@@ -16,6 +16,7 @@ public class ExecuteResults {
     private String message;
     private String errDetail;
 //    private final List<ExecutePlan> executePlan;
+    private String olkSQL;
 
     @JsonCreator
     public ExecuteResults(@JsonProperty("taskId") String taskId, 
@@ -23,7 +24,8 @@ public class ExecuteResults {
             @JsonProperty("success") boolean success,
             @JsonProperty("code") String code, 
             @JsonProperty("message") String message,
-            @JsonProperty("errDetail") String errDetail) {
+            @JsonProperty("errDetail") String errDetail,
+            @JsonProperty("olkSQL") String olkSQL) {
 //            @JsonProperty("executePlan") List<ExecutePlan> executePlan) {
         this.taskId = requireNonNull(taskId, "taskId is null");
         this.type = requireNonNull(type, "type is null");
@@ -32,6 +34,7 @@ public class ExecuteResults {
         this.message = message;
         this.errDetail = errDetail;
 //        this.executePlan = executePlan;
+        this.olkSQL = olkSQL;
     }
 
     @JsonProperty
@@ -64,8 +67,15 @@ public class ExecuteResults {
         return errDetail;
     }
 
+    @JsonProperty
+    public String getOlkSQL() {
+        return olkSQL;
+    }
+
 //    @JsonProperty
 //    public List<ExecutePlan> getExecutePlan() {
 //        return executePlan;
 //    }
+    
+    
 }

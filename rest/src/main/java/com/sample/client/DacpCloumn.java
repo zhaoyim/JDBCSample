@@ -6,18 +6,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DacpCloumn {
-    private String column;
+    private String name;
     private String type;
 
     @JsonCreator
-    public DacpCloumn(@JsonProperty("column") String column, @JsonProperty("type") String type) {
-        this.column = requireNonNull(column, "column is null.");
+    public DacpCloumn(@JsonProperty("name") String column, @JsonProperty("type") String type) {
+        this.name = requireNonNull(column, "name is null.");
         this.type = requireNonNull(type, "type is null.");
     }
 
     @JsonProperty
-    public String getColumn() {
-        return column;
+    public String getName() {
+        return name;
     }
 
     @JsonProperty

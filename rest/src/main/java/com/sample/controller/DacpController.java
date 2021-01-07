@@ -32,6 +32,7 @@ public class DacpController {
     private static final JsonCodec<DacpResults> DACP_RESULT_CODEC = jsonCodec(DacpResults.class);
     private static final String CURSOR_TYPE = "cursor"; 
     private static final String RESULT_TYPE = "result"; 
+    private static final String OLK_TYPE = "olk"; 
     
     private static int counter = 0;
 
@@ -44,37 +45,39 @@ public class DacpController {
             e.printStackTrace();
         }
 
-        return new LoginResults(3600, "6789978676sdfsdf8978878978", "root", "000", "success");
+        return new LoginResults(3600, "6789978676sdfsdf8978878978", "root", "000", "success", "http://10.1.236.69:8285");
     }
 
     @RequestMapping(value = "/execute", method = { RequestMethod.GET, RequestMethod.POST })
     public ExecuteResults execute(HttpServletRequest request) {
+        String olkSQL = "select a.*,b.* from mysql197.prestotest.course a left join mysql197.prestotest.score b on a.cno=b.cno";
+//        String olkSQL = "select * from hive3.prestotest.student2";
         try {
             StringBuilder builder = getInputJson(request);
             String params = builder.toString();
             System.out.println("execute = " + builder.toString());
             
             if(params.contains("show catalogs")) {
-                return new ExecuteResults("taskId_catalog_001", CURSOR_TYPE, true, "000", "success", null);
+                return new ExecuteResults("taskId_catalog_001", CURSOR_TYPE, true, "000", "success", null, olkSQL);
             } else if (params.contains("show databases")) {
-                return new ExecuteResults("taskId_schema_001", CURSOR_TYPE, true, "000", "success", null);
+                return new ExecuteResults("taskId_schema_001", CURSOR_TYPE, true, "000", "success", null, olkSQL);
             } else if (params.contains("show tables")) {
-                return new ExecuteResults("taskId_table_001", CURSOR_TYPE, true, "000", "success", null);
+                return new ExecuteResults("taskId_table_001", CURSOR_TYPE, true, "000", "success", null, olkSQL);
             } else if (params.contains("get tabletypes")) {
-                return new ExecuteResults("taskId_tbl_type_001", CURSOR_TYPE, true, "000", "success", null);
+                return new ExecuteResults("taskId_tbl_type_001", CURSOR_TYPE, true, "000", "success", null, olkSQL);
             } else if (params.contains("get primarykeys")) {
-                return new ExecuteResults("taskId_primary_keys_001", CURSOR_TYPE, true, "000", "success", null);
+                return new ExecuteResults("taskId_primary_keys_001", CURSOR_TYPE, true, "000", "success", null, olkSQL);
             } else if (params.contains("get importedkeys")) {
-                return new ExecuteResults("taskId_imported_keys_001", CURSOR_TYPE, true, "000", "success", null);
+                return new ExecuteResults("taskId_imported_keys_001", CURSOR_TYPE, true, "000", "success", null, olkSQL);
             } else if (params.contains("get indexinfo")) {
-                return new ExecuteResults("taskId_index_info_001", CURSOR_TYPE, true, "000", "success", null);
+                return new ExecuteResults("taskId_index_info_001", CURSOR_TYPE, true, "000", "success", null, olkSQL);
 //            } else if (params.contains("system.jdbc.columns")) {
             } else if (params.contains("desc ")) {
-                return new ExecuteResults("taskId_columns_001", CURSOR_TYPE, true, "000", "success", null);
+                return new ExecuteResults("taskId_columns_001", CURSOR_TYPE, true, "000", "success", null, olkSQL);
             } else if (params.contains("dual1")) {
-                return new ExecuteResults("taskId_dual1_001", CURSOR_TYPE, true, "000", "success", null);
+                return new ExecuteResults("taskId_dual1_001", CURSOR_TYPE, true, "000", "success", null, olkSQL);
             } else if (params.contains("get udts")) {
-                return new ExecuteResults("taskId_udts_001", CURSOR_TYPE, true, "000", "success", null);
+                return new ExecuteResults("taskId_udts_001", CURSOR_TYPE, true, "000", "success", null, olkSQL);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -82,15 +85,18 @@ public class DacpController {
 
 //        return new ExecuteResults("taskId0000001", RESULT_TYPE, true, "000", "success", null);
         
-        List<ExecutePlan> executePlan = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            ExecutePlan subPlan = new ExecutePlan("stepId", "dependentStep", "comm", "CREATE TABLE IF NOT EXISTS", "cluster", "comment");
-            executePlan.add(subPlan);
-        }
-        
+//        List<ExecutePlan> executePlan = new ArrayList<>();
+//        for (int i = 0; i < 3; i++) {
+//            ExecutePlan subPlan = new ExecutePlan("stepId", "dependentStep", "comm", "CREATE TABLE IF NOT EXISTS", "cluster", "comment");
+//            executePlan.add(subPlan);
+//        }
+//        
         // 暂时屏蔽ExecutePlan
 //        return new ExecuteResults("taskId0000001", CURSOR_TYPE, true, "000", "success", null, executePlan);
-        return new ExecuteResults("taskId0000001", CURSOR_TYPE, true, "000", "success", null);
+        
+        
+        
+        return new ExecuteResults("taskId0000001", OLK_TYPE, true, "000", "success", null, olkSQL);
     }
 
     @RequestMapping(value = "/getResult", method = { RequestMethod.GET, RequestMethod.POST })
@@ -101,7 +107,7 @@ public class DacpController {
         try {
             StringBuilder builder = getInputJson(request);
             String queryParams = builder.toString();
-//            System.out.println("queryResults = " + queryParams);
+            System.out.println("queryResults = " + queryParams);
             QueryParams params = QUERY_PARAMS_CODEC.fromJson(queryParams);
             
             String taskId = params.getTaskId();
@@ -132,7 +138,8 @@ public class DacpController {
                 
                 if (counter < 3 && 1 == params.getPageNum()) {
                     counter += 1;
-                    return new DacpResults("cursor", "taskId0000001", "001", "running", null);
+//                    return new DacpResults("cursor", "taskId0000001", "001", "running", null);
+                    return getEmptyResults();
                 }
                 
                 int total = 9;
@@ -189,8 +196,23 @@ public class DacpController {
     }
     
     private DacpResults getEmptyResults() {
-        QueryParams params = new QueryParams("taskid", "cursor", "token", 1, 3);
-        return getCursorResults(params, 0, 0);
+//        QueryParams params = new QueryParams("taskid", "cursor", "token", 1, 3);
+//        return getCursorResults(params, 0, 0);
+        
+        List<DacpCloumn> schemaList = new ArrayList<>();
+        schemaList.add(new DacpCloumn("col1", "varchar"));
+        schemaList.add(new DacpCloumn("col2", "varchar"));
+        schemaList.add(new DacpCloumn("col3", "varchar"));
+//        schemaList.add(new DacpCloumn("col41", "varchar"));
+//        schemaList.add(new DacpCloumn("col51", "varchar"));
+        CursorResults result = new CursorResults(Collections.emptyList(), 
+                schemaList, 
+                0, 
+                0,
+                0);
+        
+        // construct token expired.
+        return new DacpResults("cursor", "taskId0000001", "001", "running", result);
     }
     
     private DacpResults getCatalogs(QueryParams params) {
